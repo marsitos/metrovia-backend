@@ -1,0 +1,5 @@
+com\metrovia\controller\UbicacionController.class
+com\metrovia\UbicacionApiApplication.class
+com\metrovia\dto\UbicacionDTO.class
+com\metrovia\service\UbicacionService.class
+com\metrovia\PortRunner.class
