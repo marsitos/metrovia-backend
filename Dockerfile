@@ -1,14 +1,20 @@
-# Imagen base oficial de Java 21
-FROM eclipse-temurin:21-jdk
+# Etapa 1: Build
+FROM maven:3.9.0-eclipse-temurin-17 AS build
 
-# Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copia el archivo JAR generado por Maven
-COPY target/ubicacion-api-0.0.1-SNAPSHOT.jar app.jar
+COPY pom.xml .
+COPY src ./src
 
-# Expone el puerto (ajusta si tu backend usa otro)
+RUN mvn clean package -DskipTests
+
+# Etapa 2: Run
+FROM eclipse-temurin:17-jdk
+
+WORKDIR /app
+
+COPY --from=build /app/target/ubicacion-api-0.0.1-SNAPSHOT.jar app.jar
+
 EXPOSE 8080
 
-# Comando para ejecutar el JAR
 CMD ["java", "-jar", "app.jar"]
