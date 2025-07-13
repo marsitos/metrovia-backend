@@ -1,71 +1,41 @@
-package com.metrovia.service;
+package com.metrovia.model;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+public class Unidad {
+    private String id;
+    private double lat;
+    private double lon;
 
-import org.springframework.stereotype.Service;
+    // Constructores
+    public Unidad() {}
 
-import com.metrovia.model.Unidad;
-
-@Service
-public class UnidadService {
-
-    private final Map<String, UnidadConTiempo> ubicaciones = new ConcurrentHashMap<>();
-
-    public void actualizarUbicacion(Unidad unidad) {
-        String id = unidad.getId();
-        UnidadConTiempo existente = ubicaciones.get(id);
-
-        if (existente != null) {
-            existente.getUnidad().setLat(unidad.getLat());
-            existente.getUnidad().setLon(unidad.getLon());
-            existente.actualizarTimestamp();
-        } else {
-            ubicaciones.put(id, new UnidadConTiempo(unidad, System.currentTimeMillis()));
-        }
-
-        limpiarUnidadesInactivas();
+    public Unidad(String id, double lat, double lon) {
+        this.id = id;
+        this.lat = lat;
+        this.lon = lon;
     }
 
-    public Map<String, Unidad> obtenerUbicaciones() {
-        limpiarUnidadesInactivas();
-        return ubicaciones.entrySet().stream()
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                entry -> entry.getValue().getUnidad()
-            ));
+    // Getters y setters
+    public String getId() {
+        return id;
     }
 
-    private void limpiarUnidadesInactivas() {
-        long ahora = System.currentTimeMillis();
-        long limiteInactividad = 60_000; // 1 minuto
-
-        ubicaciones.entrySet().removeIf(entry ->
-            (ahora - entry.getValue().getTimestamp()) > limiteInactividad
-        );
+    public void setId(String id) {
+        this.id = id;
     }
 
-    // Clase interna
-    private static class UnidadConTiempo {
-        private final Unidad unidad;
-        private long timestamp;
+    public double getLat() {
+        return lat;
+    }
 
-        public UnidadConTiempo(Unidad unidad, long timestamp) {
-            this.unidad = unidad;
-            this.timestamp = timestamp;
-        }
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
 
-        public Unidad getUnidad() {
-            return unidad;
-        }
+    public double getLon() {
+        return lon;
+    }
 
-        public long getTimestamp() {
-            return timestamp;
-        }
-
-        public void actualizarTimestamp() {
-            this.timestamp = System.currentTimeMillis();
-        }
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 }
