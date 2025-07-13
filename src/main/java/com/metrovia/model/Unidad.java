@@ -1,20 +1,22 @@
+// src/main/java/com/metrovia/model/Unidad.java
 package com.metrovia.model;
 
 public class Unidad {
     private String id;
     private double lat;
     private double lon;
+    private long timestamp; // <--- Nuevo campo
 
-    // Constructores
     public Unidad() {}
 
     public Unidad(String id, double lat, double lon) {
         this.id = id;
         this.lat = lat;
         this.lon = lon;
+        this.timestamp = System.currentTimeMillis(); // <--- Inicializamos
     }
 
-    // Getters y setters
+    // Getters y Setters
     public String getId() {
         return id;
     }
@@ -37,5 +39,13 @@ public class Unidad {
 
     public void setLon(double lon) {
         this.lon = lon;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }
