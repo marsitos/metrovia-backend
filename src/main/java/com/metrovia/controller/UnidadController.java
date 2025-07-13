@@ -25,13 +25,13 @@ public class UnidadController {
     }
 
     // Recibir la ubicación del conductor
-    @PostMapping
+    @PostMapping("/unidad")
     public void recibirUbicacion(@RequestBody Unidad unidad) {
         unidadService.actualizarUbicacion(unidad);
     }
 
     // Obtener todas las ubicaciones actuales
-    @GetMapping
+    @GetMapping("/unidad")
     public Collection<Unidad> obtenerUnidades() {
         return unidadService.obtenerUbicaciones().values();
     }
