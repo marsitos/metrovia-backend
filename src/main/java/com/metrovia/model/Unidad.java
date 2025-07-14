@@ -1,6 +1,11 @@
 package com.metrovia.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Unidad {
+    @Id
     private String id;
     private double lat;//latitud
     private double lon;//longitud
@@ -37,4 +42,5 @@ public class Unidad {
     public void setLon(double lon) {
         this.lon = lon;
     }
+    
 }
