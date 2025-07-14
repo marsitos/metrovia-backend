@@ -1,41 +1,22 @@
-package com.metrovia.model;
+package com.metrovia.service;
 
-public class Unidad {
-    private String id;
-    private double lat;
-    private double lon;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-    // Constructores
-    public Unidad() {}
+import org.springframework.stereotype.Service;
 
-    public Unidad(String id, double lat, double lon) {
-        this.id = id;
-        this.lat = lat;
-        this.lon = lon;
+import com.metrovia.model.Unidad;
+
+@Service
+public class UnidadService {
+
+    private final Map<String, Unidad> ubicaciones = new ConcurrentHashMap<>();
+
+    public void actualizarUbicacion(Unidad unidad) {
+        ubicaciones.put(unidad.getId(), unidad);
     }
 
-    // Getters y setters
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public double getLat() {
-        return lat;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public double getLon() {
-        return lon;
-    }
-
-    public void setLon(double lon) {
-        this.lon = lon;
+    public Map<String, Unidad> obtenerUbicaciones() {
+        return ubicaciones;
     }
 }
