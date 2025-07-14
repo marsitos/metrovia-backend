@@ -1,4 +1,3 @@
-// src/main/java/com/metrovia/controller/UnidadController.java
 package com.metrovia.controller;
 
 import java.util.Collection;
