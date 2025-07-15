@@ -1,50 +1,79 @@
 package com.metrovia.service;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.metrovia.dto.UbicacionDTO;
 import com.metrovia.dto.UnidadCercanaDTO;
-import com.metrovia.model.Unidad;
 
 @Service
 public class EstacionService {
 
-    // Estaciones fijas en memoria
+    private final UbicacionService ubicacionService;
+
+    public EstacionService(UbicacionService ubicacionService) {
+        this.ubicacionService = ubicacionService;
+    }
+
+    // Estaciones fijas en memoria con sus IDs
     private final List<Estacion> estaciones = List.of(
         new Estacion(0, -2.091617, -79.942195),
         new Estacion(1, -2.096153, -79.936247),
-        new Estacion(2, -2.104120361181248, -79.93501554386026)
-        // ... agrega las demás estaciones con ID
+        new Estacion(2, -2.104120361181248, -79.93501554386026),
+        new Estacion(3, -2.112456, -79.933319),
+        new Estacion(4, -2.117494, -79.932254),
+        new Estacion(5, -2.12631, -79.9316972),
+        new Estacion(6, -2.1356969, -79.9337551),
+        new Estacion(7, -2.1396232, -79.9340118),
+        new Estacion(8, -2.1433007, -79.9343396),
+        new Estacion(9, -2.1484251, -79.9330418),
+        new Estacion(10, -2.1531501, -79.9312479),
+        new Estacion(11, -2.155632, -79.9301624),
+        new Estacion(12, -2.1587561, -79.9288335),
+        new Estacion(13, -2.1648032, -79.923607),
+        new Estacion(14, -2.1700231, -79.9188109),
+        new Estacion(15, -2.1761219, -79.9123315),
+        new Estacion(16, -2.178413, -79.9088075),
+        new Estacion(17, -2.1804274, -79.9037913),
+        new Estacion(18, -2.1846548, -79.9007839),
+        new Estacion(19, -2.186869, -79.894901),
+        new Estacion(20, -2.1904151, -79.8956051),
+        new Estacion(21, -2.1931992, -79.8956271),
+        new Estacion(22, -2.1943155, -79.8909449),
+        new Estacion(23, -2.194963, -79.8880367),
+        new Estacion(24, -2.197726, -79.885103),
+        new Estacion(25, -2.1965202, -79.8824468),
+        new Estacion(26, -2.1954969, -79.8855598)
     );
 
-    // Lista simulada de unidades en memoria o cargada de algún servicio
-    private final List<Unidad> unidadesActivas = new ArrayList<>();
-
     public List<UnidadCercanaDTO> obtenerUnidadesCercanas(int estacionId) {
-    Estacion estacion = estaciones.stream()
-        .filter(e -> e.getId() == estacionId)
-        .findFirst()
-        .orElse(null);
+        Estacion estacion = estaciones.stream()
+            .filter(e -> e.getId() == estacionId)
+            .findFirst()
+            .orElse(null);
 
-    if (estacion == null) return List.of();
+        if (estacion == null) return List.of();
 
-    List<UnidadCercanaDTO> cercanas = new ArrayList<>();
+        List<UnidadCercanaDTO> cercanas = new ArrayList<>();
 
-    for (Unidad unidad : unidadesActivas) {
-        double distancia = calcularDistanciaKm(
-            estacion.getLat(), estacion.getLon(),
-            unidad.getLat(), unidad.getLon()
-        );
+        // Obtén las unidades activas actuales del UbicacionService
+        List<UbicacionDTO> unidadesActivas = ubicacionService.obtenerUbicacionesActualizadas();
 
-        //if (distancia <= 3.0) {
-            cercanas.add(new UnidadCercanaDTO(unidad.getId()));
-        //}
+        for (UbicacionDTO unidad : unidadesActivas) {
+            double distancia = calcularDistanciaKm(
+                estacion.getLat(), estacion.getLon(),
+                unidad.getLat(), unidad.getLon()
+            );
+
+            // Puedes ajustar el umbral de distancia para filtrar unidades cercanas
+            if (distancia <= 10.0) { 
+                cercanas.add(new UnidadCercanaDTO(unidad.getIdUnidad(), distancia));
+            }
+        }
+
+        return cercanas;
     }
-
-    return cercanas;
-}
 
     private double calcularDistanciaKm(double lat1, double lon1, double lat2, double lon2) {
         final double R = 6371; // Radio de la Tierra en km
@@ -57,13 +86,6 @@ public class EstacionService {
         return R * c;
     }
 
-    // Para que otras clases puedan inyectar unidades (puede cambiar esto por conexión real)
-    public void setUnidadesActivas(List<Unidad> unidades) {
-        this.unidadesActivas.clear();
-        this.unidadesActivas.addAll(unidades);
-    }
-
-    // Clase interna para estaciones (puedes moverla a un archivo si lo deseas)
     private static class Estacion {
         private int id;
         private double lat;
