@@ -67,7 +67,7 @@ public class EstacionService {
             );
 
             // Puedes ajustar el umbral de distancia para filtrar unidades cercanas
-            if (distancia <= 10.0) { 
+            if (distancia <= 6.0) { 
                 cercanas.add(new UnidadCercanaDTO(unidad.getIdUnidad(), distancia));
             }
         }
