@@ -38,9 +38,9 @@ public class EstacionService {
             unidad.getLat(), unidad.getLon()
         );
 
-        if (distancia <= 3.0) {
+        //if (distancia <= 3.0) {
             cercanas.add(new UnidadCercanaDTO(unidad.getId()));
-        }
+        //}
     }
 
     return cercanas;
