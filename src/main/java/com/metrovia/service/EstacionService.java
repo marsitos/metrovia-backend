@@ -23,28 +23,28 @@ public class EstacionService {
     private final List<Unidad> unidadesActivas = new ArrayList<>();
 
     public List<UnidadCercanaDTO> obtenerUnidadesCercanas(int estacionId) {
-        Estacion estacion = estaciones.stream()
-            .filter(e -> e.getId() == estacionId)
-            .findFirst()
-            .orElse(null);
+    Estacion estacion = estaciones.stream()
+        .filter(e -> e.getId() == estacionId)
+        .findFirst()
+        .orElse(null);
 
-        if (estacion == null) return List.of();
+    if (estacion == null) return List.of();
 
-        List<UnidadCercanaDTO> cercanas = new ArrayList<>();
+    List<UnidadCercanaDTO> cercanas = new ArrayList<>();
 
-        for (Unidad unidad : unidadesActivas) {
-            double distancia = calcularDistanciaKm(
-                estacion.getLat(), estacion.getLon(),
-                unidad.getLat(), unidad.getLon()
-            );
+    for (Unidad unidad : unidadesActivas) {
+        double distancia = calcularDistanciaKm(
+            estacion.getLat(), estacion.getLon(),
+            unidad.getLat(), unidad.getLon()
+        );
 
-            if (distancia <= 3.0) { // puedes ajustar el rango
-                cercanas.add(new UnidadCercanaDTO(unidad.getId(), distancia));
-            }
+        if (distancia <= 3.0) {
+            cercanas.add(new UnidadCercanaDTO(unidad.getId()));
         }
-
-        return cercanas;
     }
+
+    return cercanas;
+}
 
     private double calcularDistanciaKm(double lat1, double lon1, double lat2, double lon2) {
         final double R = 6371; // Radio de la Tierra en km
